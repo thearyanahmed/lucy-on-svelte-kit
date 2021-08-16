@@ -14,6 +14,24 @@
 	export const prerender = true;
 </script>
 
+<script>
+	import { getArticles } from "$lib/articles.js";
+
+	export let articles;
+	
+	articles = []
+
+	getArticles()
+		.then(res => {
+			console.log('x',res)
+			articles = res.data
+		})
+		.catch(err => {
+			console.log('y',err)
+		})
+
+</script>
+
 <svelte:head>
 	<title>About</title>
 </svelte:head>
@@ -29,11 +47,13 @@
 	<!-- TODO lose the @next! -->
 	<pre>npm init svelte@next</pre>
 
-	<p>
-		The page you're looking at is purely static HTML, with no client-side interactivity needed.
-		Because of that, we don't need to load any JavaScript. Try viewing the page's source, or opening
-		the devtools network panel and reloading.
-	</p>
+	{#each articles as article (article.id)}
+		<div>
+			<span style="font-size:12px;">{article.id}</span>
+			<h3 style="font-weight: 200;">Title: {article.content.title}</h3>
+			<p>Excerpt: {article.content.excerpt}</p>
+		</div>
+	{/each}
 
 	<p>
 		The <a href="/todos">TODOs</a> page illustrates SvelteKit's data loading and form handling. Try using
